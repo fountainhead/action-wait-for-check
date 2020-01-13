@@ -1,6 +1,9 @@
 name: 'Wait For Check'
 description: 'Wait for another GitHub check to complete'
 author: 'Fountainhead Technologies Ltd.'
+branding:
+  icon: 'check-circle'
+  color: 'green'
 inputs:
   token:
     description: 'The GitHub token to use for making API requests.'
