@@ -3194,7 +3194,7 @@ function run() {
                 log: msg => core.info(msg),
                 checkName: core.getInput('checkName', { required: true }),
                 owner: core.getInput('owner') || github_1.context.repo.owner,
-                repo: core.getInput('repo') || github_1.context.repo.owner,
+                repo: core.getInput('repo') || github_1.context.repo.repo,
                 ref: core.getInput('ref') || github_1.context.sha,
                 timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
                 intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
