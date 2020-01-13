@@ -1,16 +1,25 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {context, GitHub} from '@actions/github'
+import {poll} from './poll'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const token = core.getInput('token', {required: true})
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const result = await poll({
+      client: new GitHub(token),
+      log: msg => core.info(msg),
 
-    core.setOutput('time', new Date().toTimeString())
+      checkName: core.getInput('checkName', {required: true}),
+      owner: core.getInput('owner') || context.repo.owner,
+      repo: core.getInput('repo') || context.repo.owner,
+      ref: core.getInput('ref') || context.sha,
+
+      timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
+      intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
+    })
+
+    core.setOutput('conclusion', result)
   } catch (error) {
     core.setFailed(error.message)
   }

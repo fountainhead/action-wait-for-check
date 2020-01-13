@@ -1,10 +1,26 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Wait For Check'
+description: 'Wait for another GitHub check to complete'
+author: 'Fountainhead Technologies Ltd.'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  token:
+    description: 'The GitHub token to use for making API requests.'
+  checkName:
+    description: 'The name of the GitHub check to wait for. For example, `build` or `deploy`.'
+  ref:
+    description: 'The Git ref of the commit you want to poll for a passing check.'
+    default: 'github.sha'
+  repo:
+    description: 'The name of the GitHub repository you want to poll for a passing check.'
+    default: 'github.repo.repo'
+  owner:
+    description: 'The owner of the GitHub repository you want to poll for a passing check.'
+    default: 'github.repo.owner'
+  timeoutSeconds:
+    description: 'The number of seconds to wait for the check to complete.'
+    default: '600'
+  intervalSeconds:
+    description: 'The number of seconds to wait before each poll of the GitHub API.'
+    default: '10'
 runs:
   using: 'node12'
   main: 'dist/index.js'
