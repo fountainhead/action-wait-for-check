@@ -16,7 +16,7 @@ A GitHub Action that allows you to wait for another GitHub check to complete. Th
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: build
-          ref: github.event.pull_request.head.sha || github.sha
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Do something with a passing build
         if: steps.wait-for-build.outputs.conclusion == 'success'
