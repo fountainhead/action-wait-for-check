@@ -11,7 +11,20 @@ export interface Options {
   owner: string
   repo: string
   ref: string
+  waitForAll: boolean
 }
+
+/* eslint-disable @typescript-eslint/camelcase */
+const ConclusionPriority: {[key: string]: number} = {
+  success: 0,
+  stale: 1,
+  neutral: 2,
+  cancelled: 3,
+  timed_out: 4,
+  failure: 5,
+  action_required: 6
+}
+/* eslint-enable @typescript-eslint/camelcase */
 
 export const poll = async (options: Options): Promise<string> => {
   const {
@@ -22,7 +35,8 @@ export const poll = async (options: Options): Promise<string> => {
     intervalSeconds,
     owner,
     repo,
-    ref
+    ref,
+    waitForAll
   } = options
 
   let now = new Date().getTime()
@@ -44,19 +58,28 @@ export const poll = async (options: Options): Promise<string> => {
       `Retrieved ${result.data.check_runs.length} check runs named ${checkName}`
     )
 
-    const completedCheck = result.data.check_runs.find(
+    const completedChecks = result.data.check_runs.filter(
       checkRun => checkRun.status === 'completed'
     )
-    if (completedCheck) {
-      log(
-        `Found a completed check with id ${completedCheck.id} and conclusion ${completedCheck.conclusion}`
+    if (
+      completedChecks.length &&
+      (!waitForAll || completedChecks.length === result.data.check_runs.length)
+    ) {
+      for (const check of completedChecks) {
+        log(
+          `Check completed with id ${check.id} and conclusion ${check.conclusion}`
+        )
+      }
+      return completedChecks.reduce(
+        (conclusion, check) =>
+          ConclusionPriority[check.conclusion] > ConclusionPriority[conclusion]
+            ? check.conclusion
+            : conclusion,
+        'success'
       )
-      return completedCheck.conclusion
     }
 
-    log(
-      `No completed checks named ${checkName}, waiting for ${intervalSeconds} seconds...`
-    )
+    log(`Waiting on ${checkName} for ${intervalSeconds} seconds...`)
     await wait(intervalSeconds * 1000)
 
     now = new Date().getTime()

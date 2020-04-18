@@ -73,14 +73,21 @@ This Action accepts the following configuration parameters via `with:`
 
   The number of seconds to wait before each poll of the GitHub API for checks on this commit.
 
+- `waitForAll`
+
+  **Default: `false`**
+  
+  Wait for all the checks to complete. Returns the highest priority conclusion.
 ## Outputs
 
 This Action emits a single output named `conclusion`. Like the field of the same name in the [CheckRunEvent API Response](https://developer.github.com/v3/activity/events/types/#checkrunevent-api-payload), it may be one of the following values:
 
 - `success`
-- `failure`
+- `stale`
 - `neutral`
+- `cancelled`
 - `timed_out`
+- `failure`
 - `action_required`
 
 These correspond to the `conclusion` state of the Check you're waiting on. In addition, this action will emit a conclusion of `timed_out` if the Check specified didn't complete within `timeoutSeconds`.
