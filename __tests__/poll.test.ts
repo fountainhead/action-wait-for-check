@@ -15,7 +15,8 @@ const run = () =>
     repo: 'testRepo',
     ref: 'abcd',
     timeoutSeconds: 3,
-    intervalSeconds: 0.1
+    intervalSeconds: 0.1,
+    waitForAll: false
   })
 
 test('returns conclusion of completed check', async () => {

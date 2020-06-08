@@ -13,14 +13,25 @@ inputs:
     required: true
   ref:
     description: 'The Git ref of the commit you want to poll for a passing check.'
+    required: false
   repo:
     description: 'The name of the GitHub repository you want to poll for a passing check.'
+    required: false
   owner:
     description: 'The owner of the GitHub repository you want to poll for a passing check.'
+    required: false
   timeoutSeconds:
     description: 'The number of seconds to wait for the check to complete.'
+    required: false
+    default: '600'
   intervalSeconds:
     description: 'The number of seconds to wait before each poll of the GitHub API.'
+    required: false
+    default: '10'
+  waitForAll:
+    description: 'Wait for all the checks to complete. Returns the highest priority conclusion.'
+    required: false
+    default: 'false'
 runs:
   using: 'node12'
   main: 'dist/index.js'
