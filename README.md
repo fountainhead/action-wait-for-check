@@ -40,6 +40,8 @@ This Action accepts the following configuration parameters via `with:`
   
   The name of the GitHub check to wait for. For example, `build` or `deploy`.
 
+  **IMPORTANT**: If the check you're referencing is provided by another GitHub Actions workflow, make sure that you reference the name of a _Job_ within that workflow, and _not_ the name the _Workflow_ itself.
+
 - `ref`
 
   **Default: `github.sha`**
