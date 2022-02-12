@@ -16,7 +16,7 @@ A GitHub Action that allows you to wait for another GitHub check to complete. Th
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: build
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Do something with a passing build
         if: steps.wait-for-build.outputs.conclusion == 'success'
@@ -44,11 +44,11 @@ This Action accepts the following configuration parameters via `with:`
 
 - `ref`
 
-  **Default: `github.sha`**
+  **Default: `github.ref`**
   
   The Git ref of the commit you want to poll for a passing check.
   
-  *PROTIP: You may want to use `github.pull_request.head.sha` when working with Pull Requests.*
+  *PROTIP: You may want to use `github.head_ref` when working with Pull Requests.*
 
   
 - `repo`

@@ -13,7 +13,7 @@ async function run(): Promise<void> {
       checkName: core.getInput('checkName', {required: true}),
       owner: core.getInput('owner') || context.repo.owner,
       repo: core.getInput('repo') || context.repo.repo,
-      ref: core.getInput('ref') || context.sha,
+      ref: core.getInput('ref') || context.ref,
 
       timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
       intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
