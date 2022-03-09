@@ -21,6 +21,9 @@ inputs:
     description: 'The number of seconds to wait for the check to complete.'
   intervalSeconds:
     description: 'The number of seconds to wait before each poll of the GitHub API.'
+  allowedStatus:
+    description: 'Fail action if check status is different than the configured'
+    default: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'
