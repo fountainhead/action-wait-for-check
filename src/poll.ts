@@ -22,7 +22,7 @@ export const poll = async (options: Options): Promise<string> => {
     intervalSeconds,
     owner,
     repo,
-    ref
+    ref,
   } = options
 
   let now = new Date().getTime()

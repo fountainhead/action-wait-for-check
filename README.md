@@ -75,6 +75,26 @@ This Action accepts the following configuration parameters via `with:`
 
   The number of seconds to wait before each poll of the GitHub API for checks on this commit.
 
+- `allowedStatus`
+
+  **Default: ``**
+
+  If defined, the action fails if the check result is different than the one configured in `allowedStatus`.
+
+  The example below breaks the step if `build` result is not `success`:
+
+    ```yaml
+      steps:
+      - name: Wait for build to succeed
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-build
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: build
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          allowedStatus: success
+    ```
+
 ## Outputs
 
 This Action emits a single output named `conclusion`. Like the field of the same name in the [CheckRunEvent API Response](https://developer.github.com/v3/activity/events/types/#checkrunevent-api-payload), it may be one of the following values:

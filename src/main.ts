@@ -5,6 +5,7 @@ import {poll} from './poll'
 async function run(): Promise<void> {
   try {
     const token = core.getInput('token', {required: true})
+    const allowedStatus = core.getInput('allowedStatus')
 
     const result = await poll({
       client: new GitHub(token),
@@ -20,6 +21,13 @@ async function run(): Promise<void> {
     })
 
     core.setOutput('conclusion', result)
+    
+    if (allowedStatus !== '') {
+      if (result !== allowedStatus) {
+        core.setFailed(`Expected status to be ${allowedStatus} but was ${result}`)
+      }
+    }
+
   } catch (error) {
     core.setFailed(error.message)
   }
