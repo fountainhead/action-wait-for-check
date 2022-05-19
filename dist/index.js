@@ -3245,7 +3245,7 @@ exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
         });
         log(`Retrieved ${result.data.check_runs.length} check runs named ${checkName}`);
         foundRun = foundRun || result.data.check_runs.length !== 0;
-        if (now > warmupDeadline && !foundRun) {
+        if (now >= warmupDeadline && !foundRun) {
             log(`No checks found after ${warmupSeconds} seconds, exiting with conclusion 'not_found'`);
             return 'not_found';
         }
