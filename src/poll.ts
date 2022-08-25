@@ -35,6 +35,7 @@ export const poll = async (options: Options): Promise<string> => {
     const result = await client.checks.listForRef({
       // eslint-disable-next-line @typescript-eslint/camelcase
       check_name: checkName,
+      filter: 'latest',
       owner,
       repo,
       ref
