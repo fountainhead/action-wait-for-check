@@ -3241,6 +3241,7 @@ exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
             repo,
             ref
         });
+        log(`${result}`);
         log(`Retrieved ${result.data.check_runs.length} check runs named ${checkName}`);
         const completedCheck = result.data.check_runs.find(checkRun => checkRun.status === 'completed');
         if (completedCheck) {
