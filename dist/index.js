@@ -3231,9 +3231,9 @@ exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
     const { client, log, checkName, timeoutSeconds, intervalSeconds, owner, repo, ref } = options;
     let now = new Date().getTime();
     const deadline = now + timeoutSeconds * 1000;
+    yield wait_1.wait(intervalSeconds * 1000);
     while (now <= deadline) {
         log(`Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`);
-        yield wait_1.wait(intervalSeconds * 1000);
         const result = yield client.checks.listForRef({
             // eslint-disable-next-line @typescript-eslint/camelcase
             check_name: checkName,
