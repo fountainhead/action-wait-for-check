@@ -3233,10 +3233,10 @@ exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
     const deadline = now + timeoutSeconds * 1000;
     while (now <= deadline) {
         log(`Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`);
-        yield wait_1.wait(intervalSeconds * 1000);
         const result = yield client.checks.listForRef({
             // eslint-disable-next-line @typescript-eslint/camelcase
             check_name: checkName,
+            per_page: 1,
             owner,
             repo,
             ref
