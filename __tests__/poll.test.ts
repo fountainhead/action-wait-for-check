@@ -42,7 +42,9 @@ test('returns conclusion of completed check', async () => {
     owner: 'testOrg',
     repo: 'testRepo',
     ref: 'abcd',
-    check_name: 'test'
+    check_name: 'test',
+    filter: 'latest',
+    per_page: 1
   })
 })
 

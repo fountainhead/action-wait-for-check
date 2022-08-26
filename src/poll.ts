@@ -28,17 +28,20 @@ export const poll = async (options: Options): Promise<string> => {
   let now = new Date().getTime()
   const deadline = now + timeoutSeconds * 1000
 
+  log(`Initial delay...`)
+  await wait(intervalSeconds * 1000)
   while (now <= deadline) {
     log(
       `Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`
     )
-    log(
-        `Small delay...`
-    )
+    log(`Small delay...`)
     await wait(intervalSeconds * 1000)
     const result = await client.checks.listForRef({
       // eslint-disable-next-line @typescript-eslint/camelcase
       check_name: checkName,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      per_page: 1,
+      filter: `latest`,
       owner,
       repo,
       ref
