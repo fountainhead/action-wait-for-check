@@ -4,21 +4,21 @@ on: # rebuild any PRs and main branch changes
   push:
     branches:
       - master
-      - 'releases/*'
+      - "releases/*"
 
 jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: |
-        npm install
-        npm run all
+      - uses: actions/checkout@v3
+      - run: |
+          npm ci
+          npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: ./
-      with: 
-        token: ${{ secrets.GITHUB_TOKEN }}
-        checkName: build
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: build
