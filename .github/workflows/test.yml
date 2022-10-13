@@ -22,3 +22,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: build
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
