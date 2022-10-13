@@ -33,7 +33,6 @@ export const poll = async (options: Options): Promise<string> => {
       `Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`
     )
     const result = await client.rest.checks.listForRef({
-      // eslint-disable-next-line @typescript-eslint/camelcase
       check_name: checkName,
       owner,
       repo,
@@ -52,6 +51,7 @@ export const poll = async (options: Options): Promise<string> => {
         `Found a completed check with id ${completedCheck.id} and conclusion ${completedCheck.conclusion}`
       )
       // conclusion is only `null` if status is not `completed`.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return completedCheck.conclusion!
     }
 
