@@ -48,8 +48,7 @@ This Action accepts the following configuration parameters via `with:`
 
   The Git ref of the commit you want to poll for a passing check.
 
-  *PROTIP: You may want to use `github.pull_request.head.sha` when working with Pull Requests.*
-
+  _PROTIP: You may want to use `github.event.pull_request.head.sha` when working with Pull Requests._
 
 - `repo`
 
