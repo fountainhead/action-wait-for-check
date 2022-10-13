@@ -36,14 +36,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __importStar(__nccwpck_require__(5438));
+const github_1 = __nccwpck_require__(5438);
 const poll_1 = __nccwpck_require__(5498);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
             const result = yield (0, poll_1.poll)({
-                client: github_1.default.getOctokit(token),
+                client: (0, github_1.getOctokit)(token),
                 log: msg => core.info(msg),
                 checkName: core.getInput('checkName', { required: true }),
                 owner: core.getInput('owner') || github_1.context.repo.owner,

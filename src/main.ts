@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import github, {context} from '@actions/github'
+import {context, getOctokit} from '@actions/github'
 import {poll} from './poll'
 
 async function run(): Promise<void> {
@@ -7,7 +7,7 @@ async function run(): Promise<void> {
     const token = core.getInput('token', {required: true})
 
     const result = await poll({
-      client: github.getOctokit(token),
+      client: getOctokit(token),
       log: msg => core.info(msg),
 
       checkName: core.getInput('checkName', {required: true}),
