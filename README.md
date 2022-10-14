@@ -75,6 +75,12 @@ This Action accepts the following configuration parameters via `with:`
 
   The number of seconds to wait before each poll of the GitHub API for checks on this commit.
 
+- `warmupSeconds`
+
+  **Default: `60`**
+
+  The number of seconds to poll until a check is found. If no check is found within this amount of time, this Action will emit a `conclusion` value of `not_found`.
+
 ## Outputs
 
 This Action emits a single output named `conclusion`. Like the field of the same name in the [CheckRunEvent API Response](https://developer.github.com/v3/activity/events/types/#checkrunevent-api-payload), it may be one of the following values:
@@ -84,5 +90,6 @@ This Action emits a single output named `conclusion`. Like the field of the same
 - `neutral`
 - `timed_out`
 - `action_required`
+- `not_found`
 
-These correspond to the `conclusion` state of the Check you're waiting on. In addition, this action will emit a conclusion of `timed_out` if the Check specified didn't complete within `timeoutSeconds`.
+These correspond to the `conclusion` state of the Check you're waiting on. In addition, this action will emit a conclusion of `timed_out` if the Check specified didn't complete within `timeoutSeconds`, or `not_found` if no check was found.
