@@ -45,9 +45,9 @@ This Action accepts the following configuration parameters via `with:`
 - `ref`
 
   **Default: `github.ref`**
-  
+
   The Git ref of the commit you want to poll for a passing check.
-  
+
   _PROTIP: You may want to use `github.head_ref` when working with Pull Requests._
 
 - `repo`
