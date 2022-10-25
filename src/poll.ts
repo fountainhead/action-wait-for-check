@@ -1,8 +1,8 @@
-import {GitHub} from '@actions/github'
+import {GitHub} from '@actions/github/lib/utils'
 import {wait} from './wait'
 
 export interface Options {
-  client: GitHub
+  client: InstanceType<typeof GitHub>
   log: (message: string) => void
 
   checkName: string
@@ -32,8 +32,7 @@ export const poll = async (options: Options): Promise<string> => {
     log(
       `Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`
     )
-    const result = await client.checks.listForRef({
-      // eslint-disable-next-line @typescript-eslint/camelcase
+    const result = await client.rest.checks.listForRef({
       check_name: checkName,
       owner,
       repo,
@@ -51,7 +50,9 @@ export const poll = async (options: Options): Promise<string> => {
       log(
         `Found a completed check with id ${completedCheck.id} and conclusion ${completedCheck.conclusion}`
       )
-      return completedCheck.conclusion
+      // conclusion is only `null` if status is not `completed`.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return completedCheck.conclusion!
     }
 
     log(

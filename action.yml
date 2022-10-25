@@ -22,5 +22,5 @@ inputs:
   intervalSeconds:
     description: 'The number of seconds to wait before each poll of the GitHub API.'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
