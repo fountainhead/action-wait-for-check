@@ -24,5 +24,5 @@ inputs:
   warmupSeconds:
     description: 'The number of seconds to poll until a check should be found'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

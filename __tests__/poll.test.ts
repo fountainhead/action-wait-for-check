@@ -1,8 +1,10 @@
 import {poll} from '../src/poll'
 
 const client = {
-  checks: {
-    listForRef: jest.fn()
+  rest: {
+    checks: {
+      listForRef: jest.fn()
+    }
   }
 }
 
@@ -20,7 +22,7 @@ const run = () =>
   })
 
 test('returns conclusion of completed check', async () => {
-  client.checks.listForRef.mockResolvedValue({
+  client.rest.checks.listForRef.mockResolvedValue({
     data: {
       check_runs: [
         {
@@ -39,7 +41,7 @@ test('returns conclusion of completed check', async () => {
   const result = await run()
 
   expect(result).toBe('success')
-  expect(client.checks.listForRef).toHaveBeenCalledWith({
+  expect(client.rest.checks.listForRef).toHaveBeenCalledWith({
     owner: 'testOrg',
     repo: 'testRepo',
     ref: 'abcd',
@@ -48,7 +50,7 @@ test('returns conclusion of completed check', async () => {
 })
 
 test('polls until check is completed', async () => {
-  client.checks.listForRef
+  client.rest.checks.listForRef
     .mockResolvedValueOnce({
       data: {
         check_runs: [
@@ -84,11 +86,11 @@ test('polls until check is completed', async () => {
   const result = await run()
 
   expect(result).toBe('failure')
-  expect(client.checks.listForRef).toHaveBeenCalledTimes(3)
+  expect(client.rest.checks.listForRef).toHaveBeenCalledTimes(3)
 })
 
 test(`returns 'timed_out' if exceeding deadline`, async () => {
-  client.checks.listForRef.mockResolvedValue({
+  client.rest.checks.listForRef.mockResolvedValue({
     data: {
       check_runs: [
         {
@@ -104,10 +106,9 @@ test(`returns 'timed_out' if exceeding deadline`, async () => {
 })
 
 test(`returns 'not_found' if not found in warmup`, async () => {
-  client.checks.listForRef.mockResolvedValue({
+  client.rest.checks.listForRef.mockResolvedValue({
     data: {
-      check_runs: [
-      ]
+      check_runs: []
     }
   })
 
