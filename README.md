@@ -11,7 +11,7 @@ A GitHub Action that allows you to wait for another GitHub check to complete. Th
 ```yaml
     steps:
       - name: Wait for build to succeed
-        uses: fountainhead/action-wait-for-check@v1.1.0
+        uses: deepinsight-io/action-wait-on-workflow@<commit_sha>
         id: wait-for-build
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
