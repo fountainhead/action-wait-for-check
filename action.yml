@@ -1,6 +1,6 @@
 name: 'Wait For Check'
 description: 'Wait for another GitHub check to complete'
-author: 'Fountainhead Technologies Ltd.'
+author: 'Deepinsight'
 branding:
   icon: 'check-circle'
   color: 'green'
@@ -21,6 +21,8 @@ inputs:
     description: 'The number of seconds to wait for the check to complete.'
   intervalSeconds:
     description: 'The number of seconds to wait before each poll of the GitHub API.'
+  warmupSeconds:
+    description: 'The number of seconds to poll until a check should be found'
 runs:
   using: 'node16'
   main: 'dist/index.js'

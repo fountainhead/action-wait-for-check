@@ -50,7 +50,8 @@ function run() {
                 repo: core.getInput('repo') || github_1.context.repo.repo,
                 ref: core.getInput('ref') || github_1.context.sha,
                 timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
-                intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
+                intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10'),
+                warmupSeconds: parseInt(core.getInput('warmupSeconds') || '60')
             });
             core.setOutput('conclusion', result);
         }
@@ -82,9 +83,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.poll = void 0;
 const wait_1 = __nccwpck_require__(5817);
 const poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
-    const { client, log, checkName, timeoutSeconds, intervalSeconds, owner, repo, ref } = options;
+    const { client, log, checkName, timeoutSeconds, intervalSeconds, warmupSeconds, owner, repo, ref } = options;
     let now = new Date().getTime();
     const deadline = now + timeoutSeconds * 1000;
+    const warmupDeadline = now + warmupSeconds * 1000;
+    let foundRun = false;
     while (now <= deadline) {
         log(`Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`);
         const result = yield client.rest.checks.listForRef({
@@ -94,6 +97,11 @@ const poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
             ref
         });
         log(`Retrieved ${result.data.check_runs.length} check runs named ${checkName}`);
+        foundRun = foundRun || result.data.check_runs.length !== 0;
+        if (now >= warmupDeadline && !foundRun) {
+            log(`No checks found after ${warmupSeconds} seconds, exiting with conclusion 'not_found'`);
+            return 'not_found';
+        }
         const completedCheck = result.data.check_runs.find(checkRun => checkRun.status === 'completed');
         if (completedCheck) {
             log(`Found a completed check with id ${completedCheck.id} and conclusion ${completedCheck.conclusion}`);

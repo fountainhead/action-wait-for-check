@@ -17,7 +17,8 @@ const run = () =>
     repo: 'testRepo',
     ref: 'abcd',
     timeoutSeconds: 3,
-    intervalSeconds: 0.1
+    intervalSeconds: 0.1,
+    warmupSeconds: 1
   })
 
 test('returns conclusion of completed check', async () => {
@@ -102,4 +103,15 @@ test(`returns 'timed_out' if exceeding deadline`, async () => {
 
   const result = await run()
   expect(result).toBe('timed_out')
+})
+
+test(`returns 'not_found' if not found in warmup`, async () => {
+  client.rest.checks.listForRef.mockResolvedValue({
+    data: {
+      check_runs: []
+    }
+  })
+
+  const result = await run()
+  expect(result).toBe('not_found')
 })

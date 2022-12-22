@@ -8,6 +8,7 @@ export interface Options {
   checkName: string
   timeoutSeconds: number
   intervalSeconds: number
+  warmupSeconds: number
   owner: string
   repo: string
   ref: string
@@ -20,6 +21,7 @@ export const poll = async (options: Options): Promise<string> => {
     checkName,
     timeoutSeconds,
     intervalSeconds,
+    warmupSeconds,
     owner,
     repo,
     ref
@@ -27,6 +29,8 @@ export const poll = async (options: Options): Promise<string> => {
 
   let now = new Date().getTime()
   const deadline = now + timeoutSeconds * 1000
+  const warmupDeadline = now + warmupSeconds * 1000
+  let foundRun = false
 
   while (now <= deadline) {
     log(
@@ -42,6 +46,15 @@ export const poll = async (options: Options): Promise<string> => {
     log(
       `Retrieved ${result.data.check_runs.length} check runs named ${checkName}`
     )
+
+    foundRun = foundRun || result.data.check_runs.length !== 0
+
+    if (now >= warmupDeadline && !foundRun) {
+      log(
+        `No checks found after ${warmupSeconds} seconds, exiting with conclusion 'not_found'`
+      )
+      return 'not_found'
+    }
 
     const completedCheck = result.data.check_runs.find(
       checkRun => checkRun.status === 'completed'
