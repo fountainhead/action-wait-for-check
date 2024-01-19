@@ -11,7 +11,7 @@ async function run(): Promise<void> {
                 client: getOctokit(token),
                 log: msg => core.info(msg),
 
-                checkName: core.getInput('checkName', {required: true}),
+                checkName: core.getInput('checkName', {required: false}),
                 owner: core.getInput('owner') || context.repo.owner,
                 repo: core.getInput('repo') || context.repo.repo,
                 ref: core.getInput('ref') || context.sha,
@@ -28,7 +28,7 @@ async function run(): Promise<void> {
             const result = await pollByID({
                 client: getOctokit(token),
                 log: msg => core.info(msg),
-                checkRunID: parseInt(core.getInput('checkRunID', {required: true})),
+                checkRunID: parseInt(core.getInput('checkRunID', {required: false})),
                 owner: core.getInput('owner') || context.repo.owner,
                 repo: core.getInput('repo') || context.repo.repo,
                 timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
