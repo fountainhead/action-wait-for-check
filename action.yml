@@ -10,7 +10,10 @@ inputs:
     required: true
   checkName:
     description: 'The name of the GitHub check to wait for. For example, `build` or `deploy`.'
-    required: true
+    required: false
+  checkRunID:
+    description: 'The id of the GitHub check to wait for. For example, `build` or `deploy`.'
+    required: false
   ref:
     description: 'The Git ref of the commit you want to poll for a passing check.'
   repo:
