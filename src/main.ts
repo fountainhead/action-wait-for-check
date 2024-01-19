@@ -6,7 +6,7 @@ async function run(): Promise<void> {
     try {
         const token = core.getInput('token', {required: true})
 
-        if (core.getInput('checkName') != null) {
+        if (core.getInput('checkName') != "") {
             const result = await poll({
                 client: getOctokit(token),
                 log: msg => core.info(msg),
@@ -24,7 +24,7 @@ async function run(): Promise<void> {
             return
         }
 
-        if (core.getInput('checkRunID') != null) {
+        if (core.getInput('checkRunID') != "") {
             const result = await pollByID({
                 client: getOctokit(token),
                 log: msg => core.info(msg),

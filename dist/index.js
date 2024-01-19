@@ -42,7 +42,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
-            if (core.getInput('checkName') != null) {
+            if (core.getInput('checkName') != "") {
                 const result = yield (0, poll_1.poll)({
                     client: (0, github_1.getOctokit)(token),
                     log: msg => core.info(msg),
@@ -56,7 +56,7 @@ function run() {
                 core.setOutput('conclusion', result);
                 return;
             }
-            if (core.getInput('checkRunID') != null) {
+            if (core.getInput('checkRunID') != "") {
                 const result = yield (0, poll_1.pollByID)({
                     client: (0, github_1.getOctokit)(token),
                     log: msg => core.info(msg),
