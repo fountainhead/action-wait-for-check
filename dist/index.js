@@ -42,17 +42,33 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
-            const result = yield (0, poll_1.poll)({
-                client: (0, github_1.getOctokit)(token),
-                log: msg => core.info(msg),
-                checkName: core.getInput('checkName', { required: true }),
-                owner: core.getInput('owner') || github_1.context.repo.owner,
-                repo: core.getInput('repo') || github_1.context.repo.repo,
-                ref: core.getInput('ref') || github_1.context.sha,
-                timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
-                intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
-            });
-            core.setOutput('conclusion', result);
+            if (core.getInput('checkName') != null) {
+                const result = yield (0, poll_1.poll)({
+                    client: (0, github_1.getOctokit)(token),
+                    log: msg => core.info(msg),
+                    checkName: core.getInput('checkName', { required: true }),
+                    owner: core.getInput('owner') || github_1.context.repo.owner,
+                    repo: core.getInput('repo') || github_1.context.repo.repo,
+                    ref: core.getInput('ref') || github_1.context.sha,
+                    timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
+                    intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
+                });
+                core.setOutput('conclusion', result);
+                return;
+            }
+            if (core.getInput('checkRunID') != null) {
+                const result = yield (0, poll_1.pollByID)({
+                    client: (0, github_1.getOctokit)(token),
+                    log: msg => core.info(msg),
+                    checkRunID: parseInt(core.getInput('checkRunID', { required: true })),
+                    owner: core.getInput('owner') || github_1.context.repo.owner,
+                    repo: core.getInput('repo') || github_1.context.repo.repo,
+                    timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
+                    intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
+                });
+                core.setOutput('conclusion', result);
+                return;
+            }
         }
         catch (error) {
             core.setFailed(error instanceof Error ? error : JSON.stringify(error));
@@ -79,7 +95,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.poll = void 0;
+exports.pollByID = exports.poll = void 0;
 const wait_1 = __nccwpck_require__(5817);
 const poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
     const { client, log, checkName, timeoutSeconds, intervalSeconds, owner, repo, ref } = options;
@@ -91,7 +107,7 @@ const poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
             check_name: checkName,
             owner,
             repo,
-            ref
+            ref: ref,
         });
         log(`Retrieved ${result.data.check_runs.length} check runs named ${checkName}`);
         const completedCheck = result.data.check_runs.find(checkRun => checkRun.status === 'completed');
@@ -109,6 +125,37 @@ const poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
     return 'timed_out';
 });
 exports.poll = poll;
+const pollByID = (options) => __awaiter(void 0, void 0, void 0, function* () {
+    const { client, log, checkRunID, timeoutSeconds, intervalSeconds, owner, repo, } = options;
+    let now = new Date().getTime();
+    const deadline = now + timeoutSeconds * 1000;
+    while (now <= deadline) {
+        log(`Retrieving check runs with ID ${checkRunID} on ${owner}/${repo}...`);
+        const result = yield client.rest.checks.get({
+            check_run_id: checkRunID,
+            owner,
+            repo,
+        });
+        const checkName = result.data.name;
+        log(`Retrieved check run named ${checkName}`);
+        //const completedCheck = result.data.check_runs.find(
+        //checkRun => checkRun.status === 'completed'
+        //)
+        const completedCheck = result.data.status === 'completed';
+        if (completedCheck) {
+            log(`Found a completed check with id ${result.data.id}, name ${checkName} and conclusion ${result.data.conclusion}`);
+            // conclusion is only `null` if status is not `completed`.
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return result.data.conclusion;
+        }
+        log(`No completed checks named ${checkName}, waiting for ${intervalSeconds} seconds...`);
+        yield (0, wait_1.wait)(intervalSeconds * 1000);
+        now = new Date().getTime();
+    }
+    log(`No completed checks after ${timeoutSeconds} seconds, exiting with conclusion 'timed_out'`);
+    return 'timed_out';
+});
+exports.pollByID = pollByID;
 
 
 /***/ }),
