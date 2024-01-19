@@ -46,7 +46,7 @@ function run() {
                 const result = yield (0, poll_1.poll)({
                     client: (0, github_1.getOctokit)(token),
                     log: msg => core.info(msg),
-                    checkName: core.getInput('checkName', { required: true }),
+                    checkName: core.getInput('checkName', { required: false }),
                     owner: core.getInput('owner') || github_1.context.repo.owner,
                     repo: core.getInput('repo') || github_1.context.repo.repo,
                     ref: core.getInput('ref') || github_1.context.sha,
@@ -60,7 +60,7 @@ function run() {
                 const result = yield (0, poll_1.pollByID)({
                     client: (0, github_1.getOctokit)(token),
                     log: msg => core.info(msg),
-                    checkRunID: parseInt(core.getInput('checkRunID', { required: true })),
+                    checkRunID: parseInt(core.getInput('checkRunID', { required: false })),
                     owner: core.getInput('owner') || github_1.context.repo.owner,
                     repo: core.getInput('repo') || github_1.context.repo.repo,
                     timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
