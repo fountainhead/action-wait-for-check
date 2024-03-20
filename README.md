@@ -34,6 +34,8 @@ This Action accepts the following configuration parameters via `with:`
 
   The GitHub token to use for making API requests. Typically, this would be set to `${{ secrets.GITHUB_TOKEN }}`.
 
+**IMPORTANT** One of checkName or checkRunID is required!
+
 - `checkName`
 
   **Required**
@@ -41,6 +43,30 @@ This Action accepts the following configuration parameters via `with:`
   The name of the GitHub check to wait for. For example, `build` or `deploy`.
 
   **IMPORTANT**: If the check you're referencing is provided by another GitHub Actions workflow, make sure that you reference the name of a _Job_ within that workflow, and _not_ the name the _Workflow_ itself.
+
+- `checkRunID`
+
+  **Required**
+
+  The ID of the GitHub check to wait for. For example: 
+
+  ```
+      - uses: LouisBrunner/checks-action@v1.6.2
+        id: check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Some run
+          status: queued
+        
+    #...other actions steps
+
+      - name: Wait for build to succeed
+        uses: fountainhead/action-wait-for-check@some-version
+        id: wait-for-regression
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkRunID: ${{steps.check.outputs.check_id }}
+  ```
 
 - `ref`
 
